@@ -452,6 +452,11 @@ class DatabaseHelper {
     return await db.delete('ACTION_NOTIFICATION', where: 'id = ?', whereArgs: [notificationId]);
   }
 
+  Future<void> deleteNotificationsForAction(int actionId) async {
+    final db = await database;
+    await db.delete('ACTION_NOTIFICATION', where: 'action_id = ?', whereArgs: [actionId]);
+  }
+
   Future<List<ActionNotification>> getMotivationMessages(int actionId, int type) async {
     final db = await database;
     final result = await db.query(

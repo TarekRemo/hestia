@@ -3,6 +3,7 @@ import '../database/database_helper.dart';
 import '../models/discipline_action.dart';
 import '../models/action_time_slot.dart';
 import '../models/action_importance.dart';
+import '../models/action_notification.dart';
 
 class ActionProvider extends ChangeNotifier {
   final DatabaseHelper _db = DatabaseHelper.instance;
@@ -34,13 +35,21 @@ class ActionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<int> addAction(DisciplineAction action, List<ActionTimeSlot> timeSlots) async {
+  Future<int> addAction(DisciplineAction action, List<ActionTimeSlot> timeSlots, {List<ActionNotification> notifications = const []}) async {
     final actionId = await _db.insertAction(action);
     for (var slot in timeSlots) {
       await _db.insertTimeSlot(ActionTimeSlot(
         actionId: actionId,
         startTime: slot.startTime,
         endTime: slot.endTime,
+      ));
+    }
+    for (var notif in notifications) {
+      await _db.insertNotification(ActionNotification(
+        actionId: actionId,
+        title: notif.title,
+        message: notif.message,
+        notificationType: notif.notificationType,
       ));
     }
     final newAction = await _db.getAction(actionId);
@@ -51,7 +60,7 @@ class ActionProvider extends ChangeNotifier {
     return actionId;
   }
 
-  Future<void> updateAction(DisciplineAction action, List<ActionTimeSlot> timeSlots) async {
+  Future<void> updateAction(DisciplineAction action, List<ActionTimeSlot> timeSlots, {List<ActionNotification> notifications = const []}) async {
     await _db.updateAction(action);
     await _db.deleteTimeSlotsForAction(action.id!);
     for (var slot in timeSlots) {
@@ -59,6 +68,15 @@ class ActionProvider extends ChangeNotifier {
         actionId: action.id,
         startTime: slot.startTime,
         endTime: slot.endTime,
+      ));
+    }
+    await _db.deleteNotificationsForAction(action.id!);
+    for (var notif in notifications) {
+      await _db.insertNotification(ActionNotification(
+        actionId: action.id,
+        title: notif.title,
+        message: notif.message,
+        notificationType: notif.notificationType,
       ));
     }
     final updated = await _db.getAction(action.id!);
@@ -79,6 +97,10 @@ class ActionProvider extends ChangeNotifier {
 
   Future<List<ActionTimeSlot>> getTimeSlots(int actionId) async {
     return await _db.getTimeSlotsForAction(actionId);
+  }
+
+  Future<List<ActionNotification>> getNotifications(int actionId) async {
+    return await _db.getNotificationsForAction(actionId);
   }
 
   Future<void> updateActionStreak(int actionId, int current, int record) async {

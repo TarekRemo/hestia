@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/discipline_action.dart';
 import '../models/action_history.dart';
+import '../models/action_notification.dart';
 import '../providers/action_provider.dart';
 import '../providers/history_provider.dart';
 import '../providers/user_provider.dart';
@@ -20,6 +21,7 @@ class ActionDetailScreen extends StatefulWidget {
 
 class _ActionDetailScreenState extends State<ActionDetailScreen> {
   List<ActionHistory> _history = [];
+  List<ActionNotification> _notifications = [];
   double _successRate = 0;
   bool _isLoading = true;
 
@@ -31,8 +33,10 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
 
   Future<void> _loadData() async {
     final historyProvider = context.read<HistoryProvider>();
+    final actionProvider = context.read<ActionProvider>();
     _history = await historyProvider.getActionHistory(widget.action.id!, limit: 30);
     _successRate = await historyProvider.getSuccessRate(widget.action.id!);
+    _notifications = await actionProvider.getNotifications(widget.action.id!);
     setState(() => _isLoading = false);
   }
 
@@ -161,6 +165,37 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
+
+                // Notifications section
+                if (_notifications.isNotEmpty) ...[
+                  const Text('Notifications personnalisées', style: AppTheme.headingSmall),
+                  const SizedBox(height: 12),
+                  ..._notifications.map((notif) => Card(
+                    margin: const EdgeInsets.symmetric(vertical: 3),
+                    child: ListTile(
+                      leading: Icon(
+                        _notifIcon(notif.notificationType),
+                        color: _notifColor(notif.notificationType),
+                      ),
+                      title: Text(notif.title, style: AppTheme.bodyLarge),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (notif.message != null && notif.message!.isNotEmpty)
+                            Text(notif.message!, style: AppTheme.bodyMedium),
+                          Text(notif.typeLabel,
+                              style: TextStyle(
+                                color: _notifColor(notif.notificationType),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              )),
+                        ],
+                      ),
+                      isThreeLine: notif.message != null && notif.message!.isNotEmpty,
+                    ),
+                  )),
+                  const SizedBox(height: 24),
+                ],
 
                 // Recent history
                 const Text('Historique récent', style: AppTheme.headingSmall),
@@ -303,6 +338,26 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
     );
     if (result == true) {
       _loadData();
+    }
+  }
+
+  IconData _notifIcon(int type) {
+    switch (type) {
+      case 1: return Icons.emoji_events_outlined;
+      case 2: return Icons.alarm;
+      case 3: return Icons.celebration_outlined;
+      case 4: return Icons.sentiment_dissatisfied_outlined;
+      default: return Icons.notifications_outlined;
+    }
+  }
+
+  Color _notifColor(int type) {
+    switch (type) {
+      case 1: return AppTheme.warningColor;
+      case 2: return AppTheme.accentColor;
+      case 3: return AppTheme.positiveColor;
+      case 4: return AppTheme.negativeColor;
+      default: return AppTheme.textMuted;
     }
   }
 }

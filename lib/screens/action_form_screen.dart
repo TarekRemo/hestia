@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/discipline_action.dart';
 import '../models/action_time_slot.dart';
 import '../models/action_importance.dart';
+import '../models/action_notification.dart';
 import '../providers/action_provider.dart';
 import '../theme/app_theme.dart';
 
@@ -28,6 +29,7 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
   ActionImportance? _selectedImportance;
   int? _frequency;
   final List<ActionTimeSlot> _timeSlots = [];
+  final List<ActionNotification> _notifications = [];
   bool _isLoading = false;
 
   @override
@@ -50,8 +52,10 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
 
     if (widget.action != null) {
       final slots = await provider.getTimeSlots(widget.action!.id!);
+      final notifs = await provider.getNotifications(widget.action!.id!);
       setState(() {
         _timeSlots.addAll(slots);
+        _notifications.addAll(notifs);
       });
       // Set selected importance
       final levels = provider.importanceLevels;
@@ -109,9 +113,9 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
     try {
       final provider = context.read<ActionProvider>();
       if (widget.action == null) {
-        await provider.addAction(action, _timeSlots);
+        await provider.addAction(action, _timeSlots, notifications: _notifications);
       } else {
-        await provider.updateAction(action, _timeSlots);
+        await provider.updateAction(action, _timeSlots, notifications: _notifications);
       }
       if (mounted) Navigator.of(context).pop(true);
     } catch (e) {
@@ -375,6 +379,71 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
                   ),
                 );
               }),
+            const SizedBox(height: 20),
+
+            // Notifications
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Notifications', style: AppTheme.bodyLarge),
+                TextButton.icon(
+                  onPressed: _addNotification,
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const Text('Ajouter'),
+                ),
+              ],
+            ),
+            if (_notifications.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Text('Aucune notification personnalisée',
+                    style: AppTheme.bodySmall),
+              )
+            else
+              ...List.generate(_notifications.length, (i) {
+                final notif = _notifications[i];
+                return Card(
+                  child: ListTile(
+                    leading: Icon(
+                      _notificationIcon(notif.notificationType),
+                      color: _notificationColor(notif.notificationType),
+                    ),
+                    title: Text(notif.title),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (notif.message != null && notif.message!.isNotEmpty)
+                          Text(notif.message!,
+                              maxLines: 1, overflow: TextOverflow.ellipsis),
+                        Text(notif.typeLabel,
+                            style: TextStyle(
+                              color: _notificationColor(notif.notificationType),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            )),
+                      ],
+                    ),
+                    isThreeLine: notif.message != null && notif.message!.isNotEmpty,
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit_outlined,
+                              color: AppTheme.accentColor, size: 20),
+                          onPressed: () => _editNotification(i),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline,
+                              color: AppTheme.errorColor, size: 20),
+                          onPressed: () {
+                            setState(() => _notifications.removeAt(i));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
             const SizedBox(height: 32),
 
             // Save button
@@ -429,6 +498,145 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  IconData _notificationIcon(int type) {
+    switch (type) {
+      case 1: return Icons.emoji_events_outlined;
+      case 2: return Icons.alarm;
+      case 3: return Icons.celebration_outlined;
+      case 4: return Icons.sentiment_dissatisfied_outlined;
+      default: return Icons.notifications_outlined;
+    }
+  }
+
+  Color _notificationColor(int type) {
+    switch (type) {
+      case 1: return AppTheme.warningColor;
+      case 2: return AppTheme.accentColor;
+      case 3: return AppTheme.positiveColor;
+      case 4: return AppTheme.negativeColor;
+      default: return AppTheme.textMuted;
+    }
+  }
+
+  void _addNotification() {
+    _showNotificationDialog();
+  }
+
+  void _editNotification(int index) {
+    _showNotificationDialog(existingIndex: index);
+  }
+
+  void _showNotificationDialog({int? existingIndex}) {
+    final isEditing = existingIndex != null;
+    final existing = isEditing ? _notifications[existingIndex] : null;
+
+    final titleController = TextEditingController(text: existing?.title ?? '');
+    final messageController = TextEditingController(text: existing?.message ?? '');
+    int selectedType = existing?.notificationType ?? 1;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: Text(isEditing ? 'Modifier la notification' : 'Nouvelle notification'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Type', style: AppTheme.bodyLarge),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    _buildTypeChip(1, 'Motivation', selectedType, (t) {
+                      setDialogState(() => selectedType = t);
+                    }),
+                    _buildTypeChip(2, 'Rappel', selectedType, (t) {
+                      setDialogState(() => selectedType = t);
+                    }),
+                    _buildTypeChip(3, 'Succès', selectedType, (t) {
+                      setDialogState(() => selectedType = t);
+                    }),
+                    _buildTypeChip(4, 'Échec', selectedType, (t) {
+                      setDialogState(() => selectedType = t);
+                    }),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Titre *',
+                    hintText: 'Ex: C\'est l\'heure !',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: messageController,
+                  decoration: const InputDecoration(
+                    labelText: 'Message (optionnel)',
+                    hintText: 'Ex: Tu peux le faire, reste motivé !',
+                  ),
+                  maxLines: 3,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Annuler'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final title = titleController.text.trim();
+                if (title.isEmpty) return;
+
+                final notif = ActionNotification(
+                  title: title,
+                  message: messageController.text.trim().isEmpty
+                      ? null
+                      : messageController.text.trim(),
+                  notificationType: selectedType,
+                );
+
+                setState(() {
+                  if (isEditing) {
+                    _notifications[existingIndex] = notif;
+                  } else {
+                    _notifications.add(notif);
+                  }
+                });
+                Navigator.pop(ctx);
+              },
+              child: Text(isEditing ? 'Modifier' : 'Ajouter'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTypeChip(int type, String label, int selectedType, ValueChanged<int> onSelected) {
+    final isSelected = selectedType == type;
+    return ChoiceChip(
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(_notificationIcon(type), size: 16,
+              color: isSelected ? Colors.white : _notificationColor(type)),
+          const SizedBox(width: 4),
+          Text(label),
+        ],
+      ),
+      selected: isSelected,
+      onSelected: (_) => onSelected(type),
+      selectedColor: _notificationColor(type),
     );
   }
 }
