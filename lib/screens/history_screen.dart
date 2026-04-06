@@ -133,19 +133,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 }
 
                 if (history.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.history,
-                            size: 64, color: AppTheme.textMuted),
-                        SizedBox(height: 16),
+                            size: 64, color: AppTheme.textMutedOf(context)),
+                        const SizedBox(height: 16),
                         Text('Aucun historique',
-                            style: AppTheme.headingSmall),
-                        SizedBox(height: 4),
+                            style: AppTheme.headingSmallOf(context)),
+                        const SizedBox(height: 4),
                         Text(
                           'Saisissez vos premières réalisations\npour voir l\'historique ici',
-                          style: AppTheme.bodyMedium,
+                          style: AppTheme.bodyMediumOf(context),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -182,7 +182,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(day, style: AppTheme.headingSmall),
+                              Text(day, style: AppTheme.headingSmallOf(context)),
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 4),
@@ -248,21 +248,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
         break;
       default:
         icon = Icons.help_outline;
-        color = AppTheme.textMuted;
+        color = AppTheme.textMutedOf(context);
     }
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 2),
       child: ListTile(
         leading: Icon(icon, color: color),
-        title: Text(h.actionName ?? 'Action', style: AppTheme.bodyLarge),
+        title: Text(h.actionName ?? 'Action', style: AppTheme.bodyLargeOf(context)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(h.statusLabel, style: AppTheme.bodySmall),
+            Text(h.statusLabel, style: AppTheme.bodySmallOf(context)),
             if (h.userComment != null && h.userComment!.isNotEmpty)
               Text(h.userComment!,
-                  style: AppTheme.bodySmall
+                  style: AppTheme.bodySmallOf(context)
                       .copyWith(fontStyle: FontStyle.italic)),
           ],
         ),

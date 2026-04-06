@@ -95,15 +95,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Text(
+                Text(
                   'Bienvenue !',
-                  style: AppTheme.headingLarge,
+                  style: AppTheme.headingLargeOf(context),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Commencez votre parcours de discipline personnelle',
-                  style: AppTheme.bodyMedium,
+                  style: AppTheme.bodyMediumOf(context),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 40),
@@ -144,7 +144,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 // Gender selection
                 Row(
                   children: [
-                    const Text('Genre :', style: AppTheme.bodyLarge),
+                    Text('Genre :', style: AppTheme.bodyLargeOf(context)),
                     const SizedBox(width: 16),
                     ChoiceChip(
                       label: const Text('Homme'),
@@ -172,7 +172,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                     child: Text(
                       '${_birthDate.day.toString().padLeft(2, '0')}/${_birthDate.month.toString().padLeft(2, '0')}/${_birthDate.year}',
-                      style: AppTheme.bodyLarge,
+                      style: AppTheme.bodyLargeOf(context),
                     ),
                   ),
                 ),

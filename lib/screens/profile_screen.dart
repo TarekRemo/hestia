@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
+import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../models/app_user.dart';
 
@@ -31,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Avatar & name
               Container(
                 padding: const EdgeInsets.all(24),
-                decoration: AppTheme.cardDecoration,
+                decoration: AppTheme.cardDecorationOf(context),
                 child: Column(
                   children: [
                     CircleAvatar(
@@ -49,10 +50,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(height: 12),
                     Text(
                       '${user.firstname} ${user.lastname}',
-                      style: AppTheme.headingMedium,
+                      style: AppTheme.headingMediumOf(context),
                     ),
                     const SizedBox(height: 4),
-                    Text(user.mail, style: AppTheme.bodyMedium),
+                    Text(user.mail, style: AppTheme.bodyMediumOf(context)),
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -85,11 +86,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Stats summary
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: AppTheme.cardDecoration,
+                decoration: AppTheme.cardDecorationOf(context),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Résumé', style: AppTheme.headingSmall),
+                    Text('Résumé', style: AppTheme.headingSmallOf(context)),
                     const SizedBox(height: 12),
                     _buildProfileRow(
                         Icons.score, 'Score total', '${user.totalScore}'),
@@ -110,29 +111,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Rest mode
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: AppTheme.cardDecoration,
+                decoration: AppTheme.cardDecorationOf(context),
                 child: SwitchListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Mode repos', style: AppTheme.bodyLarge),
-                  subtitle: const Text(
+                  title: Text('Mode repos', style: AppTheme.bodyLargeOf(context)),
+                  subtitle: Text(
                     'Désactive les pénalités (repos, maladie)',
-                    style: AppTheme.bodySmall,
+                    style: AppTheme.bodySmallOf(context),
                   ),
                   value: _restMode,
                   onChanged: (val) => setState(() => _restMode = val),
                   activeTrackColor: AppTheme.primaryColor.withValues(alpha: 0.5),
-                  inactiveThumbColor: AppTheme.textMuted,
+                  inactiveThumbColor: AppTheme.textMutedOf(context),
                   thumbColor: WidgetStateProperty.resolveWith((states) {
                     if (states.contains(WidgetState.selected)) {
                       return AppTheme.primaryColor;
                     }
-                    return AppTheme.textMuted;
+                      return AppTheme.textMutedOf(context);
                   }),
                   secondary: Icon(
                     _restMode ? Icons.bedtime : Icons.bedtime_outlined,
                     color:
-                        _restMode ? AppTheme.primaryColor : AppTheme.textMuted,
+                        _restMode ? AppTheme.primaryColor : AppTheme.textMutedOf(context),
                   ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Theme toggle
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: AppTheme.cardDecorationOf(context),
+                child: Consumer<ThemeProvider>(
+                  builder: (context, themeProvider, _) {
+                    return SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text('Thème sombre', style: AppTheme.bodyLargeOf(context)),
+                      subtitle: Text(
+                        themeProvider.isDarkMode ? 'Mode sombre activé' : 'Mode clair activé',
+                        style: AppTheme.bodySmallOf(context),
+                      ),
+                      value: themeProvider.isDarkMode,
+                      onChanged: (_) => themeProvider.toggleTheme(),
+                      activeTrackColor: AppTheme.primaryColor.withValues(alpha: 0.5),
+                      inactiveThumbColor: AppTheme.textMutedOf(context),
+                      thumbColor: WidgetStateProperty.resolveWith((states) {
+                        if (states.contains(WidgetState.selected)) {
+                          return AppTheme.primaryColor;
+                        }
+                        return AppTheme.textMutedOf(context);
+                      }),
+                      secondary: Icon(
+                        themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                        color: themeProvider.isDarkMode ? AppTheme.primaryColor : AppTheme.warningColor,
+                      ),
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -140,40 +174,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Edit profile
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: AppTheme.cardDecoration,
+                decoration: AppTheme.cardDecorationOf(context),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Paramètres', style: AppTheme.headingSmall),
+                    Text('Paramètres', style: AppTheme.headingSmallOf(context)),
                     const SizedBox(height: 12),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.edit,
                           color: AppTheme.primaryColor),
-                      title: const Text('Modifier le profil',
-                          style: AppTheme.bodyLarge),
-                      trailing: const Icon(Icons.chevron_right,
-                          color: AppTheme.textMuted),
+                      title: Text('Modifier le profil',
+                          style: AppTheme.bodyLargeOf(context)),
+                      trailing: Icon(Icons.chevron_right,
+                          color: AppTheme.textMutedOf(context)),
                       onTap: () => _editProfile(user),
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.notifications_outlined,
                           color: AppTheme.accentColor),
-                      title: const Text('Notifications',
-                          style: AppTheme.bodyLarge),
-                      trailing: const Icon(Icons.chevron_right,
-                          color: AppTheme.textMuted),
+                      title: Text('Notifications',
+                          style: AppTheme.bodyLargeOf(context)),
+                      trailing: Icon(Icons.chevron_right,
+                          color: AppTheme.textMutedOf(context)),
                       onTap: () => _showNotificationSettings(),
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.info_outline,
-                          color: AppTheme.textMuted),
-                      title: const Text('À propos',
-                          style: AppTheme.bodyLarge),
-                      trailing: const Icon(Icons.chevron_right,
-                          color: AppTheme.textMuted),
+                      leading: Icon(Icons.info_outline,
+                          color: AppTheme.textMutedOf(context)),
+                      title: Text('À propos',
+                          style: AppTheme.bodyLargeOf(context)),
+                      trailing: Icon(Icons.chevron_right,
+                          color: AppTheme.textMutedOf(context)),
                       onTap: () => _showAbout(),
                     ),
                   ],
@@ -184,16 +218,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Messages de motivation
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: AppTheme.cardDecoration,
+                decoration: AppTheme.cardDecorationOf(context),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Messages de motivation',
-                        style: AppTheme.headingSmall),
+                    Text('Messages de motivation',
+                        style: AppTheme.headingSmallOf(context)),
                     const SizedBox(height: 12),
-                    const Text(
+                    Text(
                       'Personnalisez les messages qui apparaissent après vos actions.',
-                      style: AppTheme.bodyMedium,
+                      style: AppTheme.bodyMediumOf(context),
                     ),
                     const SizedBox(height: 12),
                     ListTile(
@@ -239,8 +273,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           Icon(icon, size: 20, color: AppTheme.textMuted),
           const SizedBox(width: 12),
-          Expanded(child: Text(label, style: AppTheme.bodyMedium)),
-          Text(value, style: AppTheme.bodyLarge),
+          Expanded(child: Text(label, style: AppTheme.bodyMediumOf(context))),
+          Text(value, style: AppTheme.bodyLargeOf(context)),
         ],
       ),
     );

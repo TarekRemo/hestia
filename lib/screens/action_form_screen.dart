@@ -192,7 +192,7 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
             const SizedBox(height: 20),
 
             // Positive/Negative toggle
-            const Text('Type d\'action', style: AppTheme.bodyLarge),
+            Text('Type d\'action', style: AppTheme.bodyLargeOf(context)),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -204,7 +204,7 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
                       decoration: BoxDecoration(
                         color: _isPositive
                             ? AppTheme.positiveColor
-                            : AppTheme.bgCardLight,
+                            : AppTheme.bgCardLightOf(context),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: _isPositive
@@ -243,7 +243,7 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
                       decoration: BoxDecoration(
                         color: !_isPositive
                             ? AppTheme.negativeColor
-                            : AppTheme.bgCardLight,
+                            : AppTheme.bgCardLightOf(context),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: !_isPositive
@@ -278,7 +278,7 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
             const SizedBox(height: 20),
 
             // Importance level
-            const Text('Niveau d\'importance', style: AppTheme.bodyLarge),
+            Text('Niveau d\'importance', style: AppTheme.bodyLargeOf(context)),
             const SizedBox(height: 8),
             Consumer<ActionProvider>(
               builder: (context, provider, _) {
@@ -300,7 +300,7 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
             const SizedBox(height: 20),
 
             // Frequency
-            const Text('Fréquence', style: AppTheme.bodyLarge),
+            Text('Fréquence', style: AppTheme.bodyLargeOf(context)),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -337,7 +337,7 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
                   'Tous les $_frequency jours',
-                  style: AppTheme.bodyMedium,
+                  style: AppTheme.bodyMediumOf(context),
                 ),
               ),
             const SizedBox(height: 20),
@@ -346,7 +346,7 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Plages horaires', style: AppTheme.bodyLarge),
+                Text('Plages horaires', style: AppTheme.bodyLargeOf(context)),
                 TextButton.icon(
                   onPressed: _addTimeSlot,
                   icon: const Icon(Icons.add, size: 18),
@@ -355,10 +355,10 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
               ],
             ),
             if (_timeSlots.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text('Aucune plage horaire définie',
-                    style: AppTheme.bodySmall),
+                    style: AppTheme.bodySmallOf(context)),
               )
             else
               ...List.generate(_timeSlots.length, (i) {
@@ -385,7 +385,7 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Notifications', style: AppTheme.bodyLarge),
+                Text('Notifications', style: AppTheme.bodyLargeOf(context)),
                 TextButton.icon(
                   onPressed: _addNotification,
                   icon: const Icon(Icons.add, size: 18),
@@ -394,10 +394,10 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
               ],
             ),
             if (_notifications.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text('Aucune notification personnalisée',
-                    style: AppTheme.bodySmall),
+                    style: AppTheme.bodySmallOf(context)),
               )
             else
               ...List.generate(_notifications.length, (i) {
@@ -547,7 +547,7 @@ class _ActionFormScreenState extends State<ActionFormScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Type', style: AppTheme.bodyLarge),
+                Text('Type', style: AppTheme.bodyLargeOf(ctx)),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 6,

@@ -86,12 +86,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       children: [
         Text(
           '$greeting, ${user?.firstname ?? ''}!',
-          style: AppTheme.headingLarge,
+          style: AppTheme.headingLargeOf(context),
         ),
         const SizedBox(height: 4),
         Text(
           DateFormat('EEEE d MMMM yyyy', 'fr_FR').format(DateTime.now()),
-          style: AppTheme.bodyMedium,
+          style: AppTheme.bodyMediumOf(context),
         ),
       ],
     );
@@ -165,7 +165,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Column(
               children: [
                 const Icon(Icons.local_fire_department,
@@ -173,9 +173,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(height: 8),
                 Text(
                   '${user?.currentDisciplineStreak ?? 0}',
-                  style: AppTheme.headingMedium,
+                  style: AppTheme.headingMediumOf(context),
                 ),
-                const Text('Série actuelle', style: AppTheme.bodySmall),
+                Text('Série actuelle', style: AppTheme.bodySmallOf(context)),
               ],
             ),
           ),
@@ -184,16 +184,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Column(
               children: [
                 const Icon(Icons.star, color: Colors.amber, size: 32),
                 const SizedBox(height: 8),
                 Text(
                   '${user?.maxDisciplineStreak ?? 0}',
-                  style: AppTheme.headingMedium,
+                  style: AppTheme.headingMediumOf(context),
                 ),
-                const Text('Record', style: AppTheme.bodySmall),
+                Text('Record', style: AppTheme.bodySmallOf(context)),
               ],
             ),
           ),
@@ -213,10 +213,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: AppTheme.cardDecoration,
+      decoration: AppTheme.cardDecorationOf(context),
       child: Column(
         children: [
-          const Text("Progression d'aujourd'hui", style: AppTheme.headingSmall),
+          Text("Progression d'aujourd'hui", style: AppTheme.headingSmallOf(context)),
           const SizedBox(height: 16),
           CircularPercentIndicator(
             radius: 60,
@@ -224,10 +224,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             percent: progress.clamp(0.0, 1.0),
             center: Text(
               '${(progress * 100).toInt()}%',
-              style: AppTheme.headingMedium,
+              style: AppTheme.headingMediumOf(context),
             ),
             progressColor: AppTheme.primaryColor,
-            backgroundColor: AppTheme.bgCardLight,
+            backgroundColor: AppTheme.bgCardLightOf(context),
             circularStrokeCap: CircularStrokeCap.round,
           ),
           const SizedBox(height: 12),
@@ -250,7 +250,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Text(value,
             style: TextStyle(
                 fontSize: 20, fontWeight: FontWeight.bold, color: color)),
-        Text(label, style: AppTheme.bodySmall),
+        Text(label, style: AppTheme.bodySmallOf(context)),
       ],
     );
   }
@@ -268,19 +268,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (pendingActions.isEmpty && actions.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(20),
-        decoration: AppTheme.cardDecoration,
-        child: const Column(
+        decoration: AppTheme.cardDecorationOf(context),
+        child: Column(
           children: [
-            Icon(Icons.add_circle_outline, size: 48, color: AppTheme.textMuted),
-            SizedBox(height: 8),
+            Icon(Icons.add_circle_outline, size: 48, color: AppTheme.textMutedOf(context)),
+            const SizedBox(height: 8),
             Text(
               'Aucune action définie',
-              style: AppTheme.bodyMedium,
+              style: AppTheme.bodyMediumOf(context),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               'Créez votre première action dans l\'onglet Actions',
-              style: AppTheme.bodySmall,
+              style: AppTheme.bodySmallOf(context),
               textAlign: TextAlign.center,
             ),
           ],
@@ -290,14 +290,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: AppTheme.cardDecoration,
+      decoration: AppTheme.cardDecorationOf(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Actions en attente', style: AppTheme.headingSmall),
+              Text('Actions en attente', style: AppTheme.headingSmallOf(context)),
               Text('${pendingActions.length}',
                   style: const TextStyle(
                       color: AppTheme.accentColor,
@@ -306,11 +306,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           const SizedBox(height: 12),
           if (pendingActions.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(12),
+            Padding(
+              padding: const EdgeInsets.all(12),
               child: Text(
                 'Toutes les actions ont été saisies ! 🎉',
-                style: AppTheme.bodyMedium,
+                style: AppTheme.bodyMediumOf(context),
                 textAlign: TextAlign.center,
               ),
             )
@@ -336,10 +336,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           size: 20,
         ),
       ),
-      title: Text(action.name, style: AppTheme.bodyLarge),
+      title: Text(action.name, style: AppTheme.bodyLargeOf(context)),
       subtitle: Text(
         '${action.importanceLabel ?? ''} · ${action.frequencyLabel}',
-        style: AppTheme.bodySmall,
+        style: AppTheme.bodySmallOf(context),
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -402,8 +402,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: AppTheme.textPrimaryOf(context),
                 fontStyle: FontStyle.italic,
                 fontSize: 14,
               ),

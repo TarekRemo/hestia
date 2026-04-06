@@ -30,17 +30,17 @@ class ActionsScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.list_alt,
-                      size: 80, color: AppTheme.textMuted),
+                  Icon(Icons.list_alt,
+                      size: 80, color: AppTheme.textMutedOf(context)),
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     'Aucune action définie',
-                    style: AppTheme.headingSmall,
+                    style: AppTheme.headingSmallOf(context),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     'Ajoutez des actions pour commencer\nvotre parcours de discipline',
-                    style: AppTheme.bodyMedium,
+                    style: AppTheme.bodyMediumOf(context),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
@@ -58,14 +58,14 @@ class ActionsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               if (positive.isNotEmpty) ...[
-                _buildSectionHeader(
+                _buildSectionHeader(context,
                     'Actions positives', positive.length, AppTheme.positiveColor),
                 const SizedBox(height: 8),
                 ...positive.map((a) => _buildActionCard(context, a)),
                 const SizedBox(height: 24),
               ],
               if (negative.isNotEmpty) ...[
-                _buildSectionHeader(
+                _buildSectionHeader(context,
                     'Actions négatives', negative.length, AppTheme.negativeColor),
                 const SizedBox(height: 8),
                 ...negative.map((a) => _buildActionCard(context, a)),
@@ -81,7 +81,7 @@ class ActionsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title, int count, Color color) {
+  Widget _buildSectionHeader(BuildContext context, String title, int count, Color color) {
     return Row(
       children: [
         Container(
@@ -93,7 +93,7 @@ class ActionsScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Text(title, style: AppTheme.headingSmall),
+        Text(title, style: AppTheme.headingSmallOf(context)),
         const Spacer(),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -126,7 +126,7 @@ class ActionsScreen extends StatelessWidget {
                 : AppTheme.negativeColor,
           ),
         ),
-        title: Text(action.name, style: AppTheme.bodyLarge),
+        title: Text(action.name, style: AppTheme.bodyLargeOf(context)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -146,17 +146,17 @@ class ActionsScreen extends StatelessWidget {
                     size: 14, color: Colors.orange),
                 const SizedBox(width: 4),
                 Text('Série: ${action.currentStreak}',
-                    style: AppTheme.bodySmall),
+                    style: AppTheme.bodySmallOf(context)),
                 const SizedBox(width: 12),
                 const Icon(Icons.star, size: 14, color: Colors.amber),
                 const SizedBox(width: 4),
                 Text('Record: ${action.recordStreak}',
-                    style: AppTheme.bodySmall),
+                    style: AppTheme.bodySmallOf(context)),
               ],
             ),
           ],
         ),
-        trailing: const Icon(Icons.chevron_right, color: AppTheme.textMuted),
+        trailing: Icon(Icons.chevron_right, color: AppTheme.textMutedOf(context)),
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(

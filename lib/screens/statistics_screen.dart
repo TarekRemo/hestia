@@ -69,7 +69,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
           ],
           indicatorColor: AppTheme.primaryColor,
           labelColor: AppTheme.primaryColor,
-          unselectedLabelColor: AppTheme.textMuted,
+          unselectedLabelColor: AppTheme.textMutedOf(context),
         ),
       ),
       body: _isLoading
@@ -109,12 +109,12 @@ class _StatisticsScreenState extends State<StatisticsScreen>
           // Score evolution chart
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Évolution du score',
-                    style: AppTheme.headingSmall),
+                Text('Évolution du score',
+                    style: AppTheme.headingSmallOf(context)),
                 const SizedBox(height: 16),
                 SizedBox(
                   height: 250,
@@ -142,13 +142,13 @@ class _StatisticsScreenState extends State<StatisticsScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? AppTheme.primaryColor : AppTheme.bgCardLight,
+          color: selected ? AppTheme.primaryColor : AppTheme.bgCardLightOf(context),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: selected ? Colors.white : AppTheme.textMuted,
+            color: selected ? Colors.white : AppTheme.textMutedOf(context),
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -158,9 +158,9 @@ class _StatisticsScreenState extends State<StatisticsScreen>
 
   Widget _buildScoreChart() {
     if (_scoreEvolution.isEmpty) {
-      return const Center(
+      return Center(
         child: Text('Pas de données pour cette période',
-            style: AppTheme.bodyMedium),
+            style: AppTheme.bodyMediumOf(context)),
       );
     }
 
@@ -180,7 +180,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
           drawVerticalLine: false,
           horizontalInterval: 20,
           getDrawingHorizontalLine: (value) => FlLine(
-            color: AppTheme.bgCardLight,
+            color: AppTheme.bgCardLightOf(context),
             strokeWidth: 1,
           ),
         ),
@@ -191,7 +191,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
               reservedSize: 40,
               getTitlesWidget: (value, meta) => Text(
                 value.toInt().toString(),
-                style: AppTheme.bodySmall,
+                style: AppTheme.bodySmallOf(context),
               ),
             ),
           ),
@@ -207,8 +207,8 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     date.length >= 10 ? date.substring(5) : date,
-                    style: const TextStyle(
-                        fontSize: 10, color: AppTheme.textMuted),
+                    style: TextStyle(
+                        fontSize: 10, color: AppTheme.textMutedOf(context)),
                   ),
                 );
               },
@@ -263,14 +263,14 @@ class _StatisticsScreenState extends State<StatisticsScreen>
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Column(
               children: [
-                const Text('Score total', style: AppTheme.bodySmall),
+                Text('Score total', style: AppTheme.bodySmallOf(context)),
                 const SizedBox(height: 4),
                 Text(
                   '$total',
-                  style: AppTheme.headingMedium
+                  style: AppTheme.headingMediumOf(context)
                       .copyWith(color: AppTheme.primaryColor),
                 ),
               ],
@@ -281,14 +281,14 @@ class _StatisticsScreenState extends State<StatisticsScreen>
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Column(
               children: [
-                const Text('Moy/jour', style: AppTheme.bodySmall),
+                Text('Moy/jour', style: AppTheme.bodySmallOf(context)),
                 const SizedBox(height: 4),
                 Text(
                   dayAvg.toStringAsFixed(1),
-                  style: AppTheme.headingMedium.copyWith(
+                  style: AppTheme.headingMediumOf(context).copyWith(
                     color: dayAvg >= 0
                         ? AppTheme.positiveColor
                         : AppTheme.negativeColor,
@@ -306,8 +306,8 @@ class _StatisticsScreenState extends State<StatisticsScreen>
     final actions = context.watch<ActionProvider>().actions;
 
     if (actions.isEmpty) {
-      return const Center(
-        child: Text('Aucune action définie', style: AppTheme.bodyMedium),
+      return Center(
+        child: Text('Aucune action définie', style: AppTheme.bodyMediumOf(context)),
       );
     }
 
@@ -319,12 +319,12 @@ class _StatisticsScreenState extends State<StatisticsScreen>
           // Success rate bar chart
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Taux de réussite par action',
-                    style: AppTheme.headingSmall),
+                Text('Taux de réussite par action',
+                    style: AppTheme.headingSmallOf(context)),
                 const SizedBox(height: 16),
                 SizedBox(
                   height: (actions.length * 60.0).clamp(150, 400),
@@ -338,12 +338,12 @@ class _StatisticsScreenState extends State<StatisticsScreen>
           // Streaks comparison
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Séries par action',
-                    style: AppTheme.headingSmall),
+                Text('Séries par action',
+                    style: AppTheme.headingSmallOf(context)),
                 const SizedBox(height: 12),
                 ...actions.map((a) => _buildStreakRow(a)),
               ],
@@ -377,7 +377,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
               reservedSize: 40,
               getTitlesWidget: (value, meta) => Text(
                 '${value.toInt()}%',
-                style: AppTheme.bodySmall,
+                style: AppTheme.bodySmallOf(context),
               ),
             ),
           ),
@@ -392,8 +392,8 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     name.length > 8 ? '${name.substring(0, 8)}...' : name,
-                    style: const TextStyle(
-                        fontSize: 10, color: AppTheme.textMuted),
+                    style: TextStyle(
+                        fontSize: 10, color: AppTheme.textMutedOf(context)),
                   ),
                 );
               },
@@ -409,7 +409,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
           drawVerticalLine: false,
           horizontalInterval: 25,
           getDrawingHorizontalLine: (value) => FlLine(
-            color: AppTheme.bgCardLight,
+            color: AppTheme.bgCardLightOf(context),
             strokeWidth: 1,
           ),
         ),
@@ -442,7 +442,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
         children: [
           Expanded(
             flex: 3,
-            child: Text(action.name, style: AppTheme.bodyLarge),
+            child: Text(action.name, style: AppTheme.bodyLargeOf(context)),
           ),
           Expanded(
             flex: 2,
@@ -452,7 +452,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                     size: 16, color: Colors.orange),
                 const SizedBox(width: 4),
                 Text('${action.currentStreak}',
-                    style: AppTheme.bodyMedium),
+                    style: AppTheme.bodyMediumOf(context)),
               ],
             ),
           ),
@@ -463,7 +463,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                 const Icon(Icons.star, size: 16, color: Colors.amber),
                 const SizedBox(width: 4),
                 Text('${action.recordStreak}',
-                    style: AppTheme.bodyMedium),
+                    style: AppTheme.bodyMediumOf(context)),
               ],
             ),
           ),
@@ -484,12 +484,12 @@ class _StatisticsScreenState extends State<StatisticsScreen>
           // Pie chart: positive vs negative actions
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Répartition des actions',
-                    style: AppTheme.headingSmall),
+                Text('Répartition des actions',
+                    style: AppTheme.headingSmallOf(context)),
                 const SizedBox(height: 16),
                 SizedBox(
                   height: 200,
@@ -503,17 +503,17 @@ class _StatisticsScreenState extends State<StatisticsScreen>
           // Discipline info
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Column(
               children: [
-                const Text('Niveau de discipline',
-                    style: AppTheme.headingSmall),
+                Text('Niveau de discipline',
+                    style: AppTheme.headingSmallOf(context)),
                 const SizedBox(height: 12),
                 _buildLevelProgress(user?.currentDisciplineStreak ?? 0),
                 const SizedBox(height: 12),
                 Text(
                   user?.disciplineLevel ?? 'Débutant',
-                  style: AppTheme.headingMedium
+                  style: AppTheme.headingMediumOf(context)
                       .copyWith(color: AppTheme.primaryColor),
                 ),
               ],
@@ -524,11 +524,11 @@ class _StatisticsScreenState extends State<StatisticsScreen>
           // Badges
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Badges', style: AppTheme.headingSmall),
+                Text('Badges', style: AppTheme.headingSmallOf(context)),
                 const SizedBox(height: 12),
                 Consumer<UserProvider>(
                   builder: (context, userProvider, _) {
@@ -544,7 +544,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                           decoration: BoxDecoration(
                             color: earned
                                 ? AppTheme.primaryColor.withValues(alpha: 0.2)
-                                : AppTheme.bgCardLight,
+                                : AppTheme.bgCardLightOf(context),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: earned
@@ -558,7 +558,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                               Icon(
                                 earned ? Icons.emoji_events : Icons.lock,
                                 color:
-                                    earned ? Colors.amber : AppTheme.textMuted,
+                                    earned ? Colors.amber : AppTheme.textMutedOf(context),
                                 size: 18,
                               ),
                               const SizedBox(width: 6),
@@ -566,7 +566,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                                 badge.label,
                                 style: TextStyle(
                                   color:
-                                      earned ? Colors.white : AppTheme.textMuted,
+                                      earned ? Colors.white : AppTheme.textMutedOf(context),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -575,7 +575,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                                 '(${badge.minStreak}j)',
                                 style: TextStyle(
                                   color:
-                                      earned ? Colors.white70 : AppTheme.textMuted,
+                                      earned ? Colors.white70 : AppTheme.textMutedOf(context),
                                   fontSize: 11,
                                 ),
                               ),
@@ -600,8 +600,8 @@ class _StatisticsScreenState extends State<StatisticsScreen>
     final total = actions.length;
 
     if (total == 0) {
-      return const Center(
-        child: Text('Aucune donnée', style: AppTheme.bodyMedium),
+      return Center(
+        child: Text('Aucune donnée', style: AppTheme.bodyMediumOf(context)),
       );
     }
 
@@ -659,7 +659,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
       children: [
         LinearProgressIndicator(
           value: progress.clamp(0.0, 1.0),
-          backgroundColor: AppTheme.bgCardLight,
+          backgroundColor: AppTheme.bgCardLightOf(context),
           valueColor:
               const AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
           minHeight: 8,
@@ -668,7 +668,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
         const SizedBox(height: 6),
         Text(
           'Prochain niveau: $nextLevel ($streak/$target jours)',
-          style: AppTheme.bodySmall,
+          style: AppTheme.bodySmallOf(context),
         ),
       ],
     );

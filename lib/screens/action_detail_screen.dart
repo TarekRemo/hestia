@@ -66,7 +66,7 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
                 // Action info card
                 Container(
                   padding: const EdgeInsets.all(20),
-                  decoration: AppTheme.cardDecoration,
+                  decoration: AppTheme.cardDecorationOf(context),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -91,7 +91,7 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(action.name,
-                                    style: AppTheme.headingSmall),
+                                    style: AppTheme.headingSmallOf(context)),
                                 const SizedBox(height: 4),
                                 Text(
                                   action.isPositive
@@ -113,7 +113,7 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
                           action.description!.isNotEmpty) ...[
                         const SizedBox(height: 12),
                         Text(action.description!,
-                            style: AppTheme.bodyMedium),
+                            style: AppTheme.bodyMediumOf(context)),
                       ],
                       const Divider(height: 24),
                       _infoRow('Importance',
@@ -168,7 +168,7 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
 
                 // Notifications section
                 if (_notifications.isNotEmpty) ...[
-                  const Text('Notifications personnalisées', style: AppTheme.headingSmall),
+                  Text('Notifications personnalisées', style: AppTheme.headingSmallOf(context)),
                   const SizedBox(height: 12),
                   ..._notifications.map((notif) => Card(
                     margin: const EdgeInsets.symmetric(vertical: 3),
@@ -177,12 +177,12 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
                         _notifIcon(notif.notificationType),
                         color: _notifColor(notif.notificationType),
                       ),
-                      title: Text(notif.title, style: AppTheme.bodyLarge),
+                      title: Text(notif.title, style: AppTheme.bodyLargeOf(context)),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (notif.message != null && notif.message!.isNotEmpty)
-                            Text(notif.message!, style: AppTheme.bodyMedium),
+                            Text(notif.message!, style: AppTheme.bodyMediumOf(context)),
                           Text(notif.typeLabel,
                               style: TextStyle(
                                 color: _notifColor(notif.notificationType),
@@ -198,14 +198,14 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
                 ],
 
                 // Recent history
-                const Text('Historique récent', style: AppTheme.headingSmall),
+                Text('Historique récent', style: AppTheme.headingSmallOf(context)),
                 const SizedBox(height: 12),
                 if (_history.isEmpty)
-                  const Center(
+                  Center(
                     child: Padding(
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       child: Text('Aucun historique',
-                          style: AppTheme.bodyMedium),
+                          style: AppTheme.bodyMediumOf(context)),
                     ),
                   )
                 else
@@ -221,8 +221,8 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: AppTheme.bodyMedium),
-          Text(value, style: AppTheme.bodyLarge),
+          Text(label, style: AppTheme.bodyMediumOf(context)),
+          Text(value, style: AppTheme.bodyLargeOf(context)),
         ],
       ),
     );
@@ -233,7 +233,7 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(12),
-        decoration: AppTheme.cardDecoration,
+        decoration: AppTheme.cardDecorationOf(context),
         child: Column(
           children: [
             Icon(icon, color: color, size: 24),
@@ -244,7 +244,7 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
                     fontWeight: FontWeight.bold,
                     color: color)),
             Text(label,
-                style: AppTheme.bodySmall,
+                style: AppTheme.bodySmallOf(context),
                 textAlign: TextAlign.center),
           ],
         ),
@@ -266,15 +266,15 @@ class _ActionDetailScreenState extends State<ActionDetailScreen> {
         break;
       default:
         icon = Icons.help_outline;
-        color = AppTheme.textMuted;
+        color = AppTheme.textMutedOf(context);
     }
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 3),
       child: ListTile(
         leading: Icon(icon, color: color),
-        title: Text(h.statusLabel, style: AppTheme.bodyLarge),
-        subtitle: Text(h.date, style: AppTheme.bodySmall),
+        title: Text(h.statusLabel, style: AppTheme.bodyLargeOf(context)),
+        subtitle: Text(h.date, style: AppTheme.bodySmallOf(context)),
         trailing: Text(
           '${h.scoreImpact > 0 ? "+" : ""}${h.scoreImpact}',
           style: TextStyle(

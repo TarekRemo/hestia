@@ -143,7 +143,7 @@ class _LogActionScreenState extends State<LogActionScreen> {
           // Action info
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.cardDecoration,
+            decoration: AppTheme.cardDecorationOf(context),
             child: Row(
               children: [
                 CircleAvatar(
@@ -162,10 +162,10 @@ class _LogActionScreenState extends State<LogActionScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(action.name, style: AppTheme.headingSmall),
+                      Text(action.name, style: AppTheme.headingSmallOf(context)),
                       Text(
                         '${action.importanceLabel ?? "Moyen"} · ${action.frequencyLabel}',
-                        style: AppTheme.bodySmall,
+                        style: AppTheme.bodySmallOf(context),
                       ),
                     ],
                   ),
@@ -176,7 +176,7 @@ class _LogActionScreenState extends State<LogActionScreen> {
           const SizedBox(height: 24),
 
           // Status selection
-          const Text('Statut', style: AppTheme.headingSmall),
+          Text('Statut', style: AppTheme.headingSmallOf(context)),
           const SizedBox(height: 12),
           Row(
             children: [
