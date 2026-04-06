@@ -8,6 +8,7 @@ import '../providers/history_provider.dart';
 import '../models/discipline_action.dart';
 import '../theme/app_theme.dart';
 import 'log_action_screen.dart';
+import 'gift_card_store_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -56,6 +57,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               _buildScoreCard(),
               const SizedBox(height: 16),
               _buildStreakCard(),
+              const SizedBox(height: 16),
+              _buildGiftCardBanner(),
               const SizedBox(height: 16),
               _buildTodayProgress(),
               const SizedBox(height: 16),
@@ -199,6 +202,61 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildGiftCardBanner() {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const GiftCardStoreScreen()),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppTheme.bgCardOf(context),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppTheme.primaryColor.withValues(alpha: 0.3),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.primaryColor.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.card_giftcard,
+                  color: AppTheme.primaryColor, size: 28),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Boutique cadeaux',
+                      style: AppTheme.bodyLargeOf(context)
+                          .copyWith(fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Échangez vos points contre des cartes cadeaux',
+                    style: AppTheme.bodySmallOf(context),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: AppTheme.textMutedOf(context)),
+          ],
+        ),
+      ),
     );
   }
 

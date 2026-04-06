@@ -7,6 +7,7 @@ import '../models/discipline_action.dart';
 import '../models/action_time_slot.dart';
 import '../models/action_history.dart';
 import '../models/action_notification.dart';
+import '../models/gift_card_redemption.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -25,8 +26,9 @@ class DatabaseHelper {
     final path = join(dbPath, fileName);
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _upgradeDB,
       onConfigure: (db) async {
         await db.execute('PRAGMA foreign_keys = ON');
       },
@@ -126,12 +128,36 @@ class DatabaseHelper {
       )
     ''');
 
+    await _createGiftCardTable(db);
+
     await db.execute('CREATE INDEX idx_action_user ON ACTION(user_id)');
     await db.execute('CREATE INDEX idx_action_history_action ON ACTION_HISTORY(action_id)');
     await db.execute('CREATE INDEX idx_time_slot_action ON ACTION_TIME_SLOT(action_id)');
+    await db.execute('CREATE INDEX idx_gift_card_user ON GIFT_CARD_REDEMPTION(user_id)');
 
     // Seed default data
     await _seedData(db);
+  }
+
+  Future<void> _createGiftCardTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE GIFT_CARD_REDEMPTION (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        store_name TEXT NOT NULL,
+        points_spent INTEGER NOT NULL,
+        euro_value REAL NOT NULL,
+        redeemed_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES APP_USER(id)
+      )
+    ''');
+  }
+
+  Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await _createGiftCardTable(db);
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_gift_card_user ON GIFT_CARD_REDEMPTION(user_id)');
+    }
   }
 
   Future<void> _seedData(Database db) async {
@@ -465,6 +491,32 @@ class DatabaseHelper {
       whereArgs: [actionId, type],
     );
     return result.map((m) => ActionNotification.fromMap(m)).toList();
+  }
+
+  // ─── GIFT CARD METHODS ───
+  Future<int> insertGiftCardRedemption(GiftCardRedemption redemption) async {
+    final db = await database;
+    return await db.insert('GIFT_CARD_REDEMPTION', redemption.toMap()..remove('id'));
+  }
+
+  Future<List<GiftCardRedemption>> getGiftCardRedemptions(int userId) async {
+    final db = await database;
+    final result = await db.query(
+      'GIFT_CARD_REDEMPTION',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+      orderBy: 'redeemed_at DESC',
+    );
+    return result.map((m) => GiftCardRedemption.fromMap(m)).toList();
+  }
+
+  Future<int> getTotalPointsRedeemed(int userId) async {
+    final db = await database;
+    final result = await db.rawQuery(
+      'SELECT COALESCE(SUM(points_spent), 0) as total FROM GIFT_CARD_REDEMPTION WHERE user_id = ?',
+      [userId],
+    );
+    return (result.first['total'] as int?) ?? 0;
   }
 
   Future<void> close() async {

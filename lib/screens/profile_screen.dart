@@ -4,6 +4,7 @@ import '../providers/user_provider.dart';
 import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../models/app_user.dart';
+import 'gift_card_store_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -180,6 +181,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Text('Paramètres', style: AppTheme.headingSmallOf(context)),
                     const SizedBox(height: 12),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.card_giftcard,
+                          color: AppTheme.accentColor),
+                      title: Text('Boutique cadeaux',
+                          style: AppTheme.bodyLargeOf(context)),
+                      trailing: Icon(Icons.chevron_right,
+                          color: AppTheme.textMutedOf(context)),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => const GiftCardStoreScreen()),
+                      ),
+                    ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.edit,

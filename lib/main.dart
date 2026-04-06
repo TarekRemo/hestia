@@ -6,6 +6,7 @@ import 'providers/user_provider.dart';
 import 'providers/action_provider.dart';
 import 'providers/history_provider.dart';
 import 'providers/theme_provider.dart';
+import 'providers/gift_card_provider.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/home_screen.dart';
 
@@ -26,6 +27,7 @@ class DisciplineApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ActionProvider()),
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => GiftCardProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
